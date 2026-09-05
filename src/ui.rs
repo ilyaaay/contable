@@ -10,7 +10,7 @@ use std::io;
 
 pub fn app(terminal: &mut DefaultTerminal, docker_data: &DockerData) -> io::Result<()> {
     loop {
-        terminal.draw(|frame| render(frame, docker_data));
+        terminal.draw(|frame| render(frame, docker_data))?;
 
         if crossterm::event::read()?.is_key_press() {
             break Ok(());
@@ -50,7 +50,7 @@ fn render(frame: &mut Frame, docker_data: &DockerData) {
         .constraints(partitions_in_persents)
         .split(frame.area());
 
-    let images = "test";
+    let images = docker_data.images.to_string();
 
     frame.render_widget(
         Paragraph::new(images).block(Block::new().title("Images").borders(Borders::ALL)),

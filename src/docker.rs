@@ -2,7 +2,7 @@ use bollard::{
     self, Docker, errors::Error, plugin::ImageSummary, query_parameters::ListImagesOptions,
 };
 use serde::Serialize;
-use std::{fmt, time::Duration};
+use std::fmt;
 
 #[derive(Debug, Serialize)]
 pub struct DockerData {
@@ -12,12 +12,25 @@ pub struct DockerData {
 #[derive(Debug, Serialize)]
 pub struct Images(pub Vec<ImageSummary>);
 
+impl fmt::Display for Images {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut list = Vec::new();
+
+        for x in self.0.iter() {
+            if let Ok(s) = serde_json::to_string(x) {
+                list.push(s);
+            };
+        }
+
+        write!(f, "{}", list.join("\n"))
+    }
+}
+
 pub struct DockerDaemon(Docker);
 
 impl DockerDaemon {
     pub async fn connect() -> Result<Self, Error> {
-        let connection = Docker::connect_with_defaults()?.with_timeout(Duration::from_millis(2000));
-        connection.ping().await?;
+        let connection = Docker::connect_with_defaults()?;
 
         Ok(Self(connection))
     }
