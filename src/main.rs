@@ -1,32 +1,19 @@
-use bollard::{Docker, errors};
-use std::{fmt, io};
+mod docker;
+mod error;
+mod ui;
 
-#[derive(Debug)]
-pub enum Error {
-    DockerDaemon(errors::Error),
-    Io(io::Error),
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Error::DockerDaemon(error) => write!(f, "docker daemon error: {:?}", error),
-            Error::Io(error) => write!(f, "io error: {:?}", error),
-        }
-    }
-}
-
-impl From<errors::Error> for Error {
-    fn from(value: errors::Error) -> Self {
-        Self::DockerDaemon(value)
-    }
-}
+use crate::{
+    docker::DockerDaemon,
+    error::Error::{self},
+    ui::app,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    let connection = Docker::connect_with_defaults()?;
+    let docker_daemon = DockerDaemon::connect().await?;
+    let docker_data = docker_daemon.collect_data().await?;
 
-    connection.ping().await?;
+    ratatui::run(|x| app(x, &docker_data))?;
 
     Ok(())
 }
