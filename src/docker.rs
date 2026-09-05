@@ -2,7 +2,6 @@ use bollard::{
     self, Docker, errors::Error, plugin::ImageSummary, query_parameters::ListImagesOptions,
 };
 use serde::Serialize;
-use std::fmt;
 
 #[derive(Debug, Serialize)]
 pub struct DockerData {
@@ -12,17 +11,17 @@ pub struct DockerData {
 #[derive(Debug, Serialize)]
 pub struct Images(pub Vec<ImageSummary>);
 
-impl fmt::Display for Images {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Images {
+    pub fn get_strings(&self) -> Vec<String> {
         let mut list = Vec::new();
 
-        for x in self.0.iter() {
-            if let Ok(s) = serde_json::to_string(x) {
+        for x in &self.0 {
+            if let Ok(s) = serde_json::to_string(&x) {
                 list.push(s);
-            };
+            }
         }
 
-        write!(f, "{}", list.join("\n"))
+        list
     }
 }
 
