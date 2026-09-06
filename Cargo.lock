@@ -76,6 +76,12 @@ checksum = "349f9b6a179ed607305526ca489b34ad0a41aed5f7980fa90eb03160b69598fb"
 
 [[package]]
 name = "bitflags"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32866f4d103c4e438b1db1158aa1b1a80ee078e5d77a59a2f906fd62a577389c"
+
+[[package]]
+name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
@@ -113,7 +119,7 @@ dependencies = [
  "hyper-named-pipe",
  "hyper-util",
  "hyperlocal",
- "log",
+ "log 0.4.34",
  "pin-project-lite",
  "serde",
  "serde_derive",
@@ -205,6 +211,7 @@ dependencies = [
  "ratatui",
  "serde",
  "serde_json",
+ "ssh",
  "time",
  "tokio",
 ]
@@ -927,6 +934,15 @@ dependencies = [
 
 [[package]]
 name = "log"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e19e8d5c34a3e0e2223db8e060f9e8264aeeb5c5fc64a4ee9965c062211c024b"
+dependencies = [
+ "log 0.4.34",
+]
+
+[[package]]
+name = "log"
 version = "0.4.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9f8bd3e56ce4dfc153cf470fffbfa98c7620958b312ca5c3a4b8d5181fd13c6"
@@ -984,7 +1000,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4b18443e9c262bfe8fa82f51666e2642c53393f7e5c27b3e1aeab922cff5b9d8"
 dependencies = [
  "libc",
- "log",
+ "log 0.4.34",
  "wasi",
  "windows-sys",
 ]
@@ -1612,6 +1628,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ssh"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dd816de0b010dd3a606af642ab85e832e1dc4333f2e7f1bed7ed0e9171068ad"
+dependencies = [
+ "bitflags 0.3.3",
+ "libc",
+ "log 0.3.9",
+]
+
+[[package]]
 name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1744,7 +1771,7 @@ dependencies = [
  "hex",
  "lazy_static",
  "libc",
- "log",
+ "log 0.4.34",
  "memmem",
  "nix",
  "num-derive",
@@ -2092,7 +2119,7 @@ version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c0a6e355560527dd2d1cf7890652f4f09bb3433b6aadade4c9b5ed76de5f3ec"
 dependencies = [
- "log",
+ "log 0.4.34",
  "wezterm-dynamic",
 ]
 
@@ -2127,7 +2154,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f2ab60e120fd6eaa68d9567f3226e876684639d22a4219b313ff69ec0ccd5ac"
 dependencies = [
- "log",
+ "log 0.4.34",
  "ordered-float",
  "strsim",
  "thiserror 1.0.69",

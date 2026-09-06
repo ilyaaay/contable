@@ -21,17 +21,51 @@ pub fn app(terminal: &mut DefaultTerminal, docker_data: &DockerData) -> io::Resu
 }
 
 fn render(frame: &mut Frame, docker_data: &DockerData) {
-    let partitions_in_persents = [
-        Constraint::Percentage(33),
-        Constraint::Percentage(33),
-        Constraint::Percentage(33),
-    ];
 
-    let layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(partitions_in_persents)
-        .split(frame.area());
+    // let partitions_in_persents = [
+    //     Constraint::Percentage(33),
+    //     Constraint::Percentage(33),
+    //     Constraint::Percentage(33),
+    // ];
 
+    // let layout = Layout::default()
+    //     .direction(Direction::Vertical)
+    // .constraints(partitions_in_persents)
+    // .split(frame.area());
+
+    // {
+    //     let lines = docker_data
+    //         .images
+    //         .get_images()
+    //         .into_iter()
+    //         .map(Line::from)
+    //         .collect::<Vec<_>>();
+
+    //     let block = Block::new().title("Containers").borders(Borders::ALL);
+
+    //     frame.render_widget(Paragraph::new(lines).block(block), frame.area());
+    // }
+
+    // {
+    //     let lines = docker_data
+    //         .containers
+    //         .get_containers()
+    //         .into_iter()
+    //         .map(Line::from)
+    //         .collect::<Vec<_>>();
+
+    //     let block = Block::new().title("Containers").borders(Borders::ALL);
+
+    //     frame.render_widget(Paragraph::new(lines).block(block), layout[1]);
+    // }
+
+    // frame.render_widget(
+    //     Paragraph::new("2").block(Block::new().borders(Borders::ALL)),
+    //     layout[2],
+    // );
+}
+
+fn render_docker_data(frame: &mut Frame, docker_data: &DockerData) {
     {
         let lines = docker_data
             .images
@@ -40,18 +74,8 @@ fn render(frame: &mut Frame, docker_data: &DockerData) {
             .map(Line::from)
             .collect::<Vec<_>>();
 
-        let block = Block::new().title("Images").borders(Borders::ALL);
+        let block = Block::new().title("Containers").borders(Borders::ALL);
 
         frame.render_widget(Paragraph::new(lines).block(block), frame.area());
     }
-
-    frame.render_widget(
-        Paragraph::new("1").block(Block::new().title("Containers").borders(Borders::ALL)),
-        layout[1],
-    );
-
-    frame.render_widget(
-        Paragraph::new("2").block(Block::new().borders(Borders::ALL)),
-        layout[2],
-    );
 }
