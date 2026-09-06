@@ -2,6 +2,7 @@ use bollard::{
     self, Docker, errors::Error, plugin::ImageSummary, query_parameters::ListImagesOptions,
 };
 use serde::Serialize;
+use time::{OffsetDateTime, macros::format_description};
 
 #[derive(Debug, Serialize)]
 pub struct DockerData {
@@ -12,13 +13,22 @@ pub struct DockerData {
 pub struct Images(pub Vec<ImageSummary>);
 
 impl Images {
-    pub fn get_strings(&self) -> Vec<String> {
+    pub fn get_images(&self) -> Vec<String> {
+        let datetime_format = format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
         let mut list = Vec::new();
 
-        for x in &self.0 {
-            if let Ok(s) = serde_json::to_string(&x) {
-                list.push(s);
-            }
+        for image in &self.0 {
+            list.push(format!("ID:         {}", image.id));
+            list.push(format!("Tags:       {}", image.repo_tags.join(",")));
+            list.push(format!("Size:       {} bytes", image.size));
+            list.push(format!("SharedSize: {} bytes", image.shared_size));
+
+            let created = OffsetDateTime::from_unix_timestamp(image.created)
+                .ok()
+                .and_then(|x| x.format(&datetime_format).ok())
+                .unwrap_or_else(|| image.created.to_string());
+            list.push(format!("Created:    {}", created));
+            list.push(format!("Active containers: {}", image.containers));
         }
 
         list

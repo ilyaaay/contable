@@ -1,8 +1,8 @@
 use crate::docker::DockerData;
 use ratatui::{
-    DefaultTerminal, Frame, crossterm,
+    DefaultTerminal, Frame,
+    crossterm::event::read,
     layout::{Constraint, Direction, Layout},
-    style::Stylize,
     text::Line,
     widgets::{Block, Borders, Paragraph},
 };
@@ -12,7 +12,9 @@ pub fn app(terminal: &mut DefaultTerminal, docker_data: &DockerData) -> io::Resu
     loop {
         terminal.draw(|frame| render(frame, docker_data))?;
 
-        if crossterm::event::read()?.is_key_press() {
+        if let Some(key) = read()?.as_key_event()
+            && key.code.is_char('q')
+        {
             break Ok(());
         }
     }
@@ -31,17 +33,16 @@ fn render(frame: &mut Frame, docker_data: &DockerData) {
         .split(frame.area());
 
     {
-        let images = docker_data
+        let lines = docker_data
             .images
-            .get_strings()
+            .get_images()
             .into_iter()
             .map(Line::from)
             .collect::<Vec<_>>();
 
-        frame.render_widget(
-            Paragraph::new(images).block(Block::new().title("Images").borders(Borders::ALL)),
-            layout[0],
-        );
+        let block = Block::new().title("Images").borders(Borders::ALL);
+
+        frame.render_widget(Paragraph::new(lines).block(block), frame.area());
     }
 
     frame.render_widget(
